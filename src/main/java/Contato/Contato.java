@@ -17,68 +17,73 @@ public class Contato {
 
     public Contato(){}
 
-
     public void gravarContato() throws SQLException {
-
-        String sql = "INSET INTO tb_contato(nome, e_mail, telefone) VALUES(?,?,?)";
+        String sql = "INSET INTO tb_contato(nome, e_mail, telefone) VALUES(?, ?, ?)";
         PreparedStatement statement = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
-        statement.setString(1,this.nome);
-        statement.setString(2,this.email);
-        statement.setString(3,this.telefone);
+
+        statement.setString(1, this.nome);
+        statement.setString(2, this.email);
+        statement.setString(3, this.telefone);
 
         statement.execute();
-
         ResultSet result = statement.getGeneratedKeys();
 
-        if(result.next()) {
+        if (result.next()) {
             this.idContato = result.getInt(1);
             System.out.println("Contato gravado!");
         }
     }
 
-    public void atualizarContato() throws SQLException{
+    public void atualizarContato() throws SQLException {
         String sql = "UPDATE tb_contato SET nome = ?, e_mail = ?, telefone = ? WHERE contato_id = ?";
         PreparedStatement statement = conexao.prepareStatement(sql);
-        statement.setString(1,this.nome);
-        statement.setString(2,this.email);
-        statement.setString(3,this.telefone);
+
+        statement.setString(1, this.nome);
+        statement.setString(2, this.email);
+        statement.setString(3, this.telefone);
+
         String id = this.idContato.toString();
-        statement.setString(4,id);
+        statement.setString(4, id);
+
         int rowsAffected = statement.executeUpdate();
-        if(rowsAffected > 0)
+
+        if (rowsAffected > 0) {
             System.out.println("Contato atualizado!");
-        else
+        } else {
             System.out.println("Contato não foi encontrado!");
+        }
     }
 
-    public void deletarContato(Integer idContato)  throws  SQLException{
-
+    public void deletarContato(Integer idContato) throws SQLException {
         String sql = "DELETE FROM tb_contato WHERE contato_id = ?";
         PreparedStatement statement = conexao.prepareStatement(sql);
+
         String id = idContato.toString();
-        statement.setString(1,id);
+        statement.setString(1, id);
+
         int rowsAffected = statement.executeUpdate();
 
-        if(rowsAffected > 0)
+        if (rowsAffected > 0) {
             System.out.println("Contato foi deletado!");
-        else
+        } else {
             System.out.println("Contato não foi encontrado para deletar!");
-
+        }
     }
 
-    public void deletarContato() throws SQLException{
+    public void deletarContato() throws SQLException {
         this.deletarContato(this.idContato);
     }
 
-    public boolean obterContatoPeloId(Integer idContato)  throws  SQLException{
-
+    public boolean obterContatoPeloId(Integer idContato)  throws  SQLException {
         String sql = "SELECT contato_id, nome, e_mail, telefone FROM tb_contato WHERE contato_id = ?";
         PreparedStatement statement = conexao.prepareStatement(sql);
+
         String id = idContato.toString();
-        statement.setString(1,id);
+        statement.setString(1, id);
+
         ResultSet result = statement.executeQuery();
 
-        if(result.next()) {
+        if (result.next()) {
             this.setIdContato(result.getInt("contato_id"));
             this.setNome(result.getString("nome"));
             this.setEmail(result.getString("e_mail"));
@@ -87,20 +92,19 @@ public class Contato {
         }
 
         return false;
-
     }
 
-    public ResultSet obterContatos()  throws SQLException{
+    public ResultSet obterContatos()  throws SQLException {
         String sql = "SELECT contato_id, nome, e_mail, telefone FROM tb_contato";
         PreparedStatement statement = conexao.prepareStatement(sql);
+
         return statement.executeQuery();
     }
 
     public List<Contato> obterListaContatos()  {
         List<Contato> contatos = new ArrayList<>();
 
-        try(ResultSet resultSetContatos = this.obterContatos()) {
-
+        try (ResultSet resultSetContatos = this.obterContatos()) {
             while (resultSetContatos.next()) {
                 Contato contato = new Contato();
                 contato.setIdContato(resultSetContatos.getInt("contato_id"));
@@ -109,19 +113,17 @@ public class Contato {
                 contato.setTelefone(resultSetContatos.getString("telefone"));
                 contatos.add(contato);
             }
-
-        }catch (SQLException e) {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
 
         return contatos;
-
     }
 
     public List<Contato> pesquisaContato(String termo) {
         String sql = "SELECT contato_id, nome, e_mail, telefone " +
-                "FROM tb_contato " +
-                "WHERE nome LIKE ? OR e_mail LIKE ? OR telefone LIKE ?";
+            "FROM tb_contato " +
+            "WHERE nome LIKE ? OR e_mail LIKE ? OR telefone LIKE ?";
         List<Contato> contatos = new ArrayList<>();
 
         try (PreparedStatement statement = conexao.prepareStatement(sql)) {
@@ -183,11 +185,11 @@ public class Contato {
     @Override
     public String toString() {
         return "Contato{" +
-                "idContato=" + idContato +
-                ", nome='" + nome + '\'' +
-                ", email='" + email + '\'' +
-                ", telefone='" + telefone + '\'' +
-                ", conexao=" + conexao +
-                '}';
+            "idContato=" + idContato +
+            ", nome='" + nome + '\'' +
+            ", email='" + email + '\'' +
+            ", telefone='" + telefone + '\'' +
+            ", conexao=" + conexao +
+            "}";
     }
 }

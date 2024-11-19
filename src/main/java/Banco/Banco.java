@@ -11,7 +11,7 @@ public class Banco {
 
     public Banco(String servidor, String porta, String nomeBaco, String usuario, String senha) {
         String urlBase = "jdbc:mysql://?:?/?";
-        String realUrl = String.format(urlBase,servidor, porta, nomeBaco);
+        String realUrl = String.format(urlBase, servidor, porta, nomeBaco);
         this.conectar(realUrl, usuario, senha);
     }
 
