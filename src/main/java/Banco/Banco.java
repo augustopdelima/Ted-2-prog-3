@@ -18,9 +18,8 @@ public class Banco {
     public Banco(String nomeBanco, String usuario, String senha) {
         String urlBase = "jdbc:mysql://localhost:3306/?";
         String realUrl = String.format(urlBase, nomeBanco);
-        this.conectar(realUrl,usuario, senha);
+        this.conectar(realUrl, usuario, senha);
     }
-
 
     private void conectar(String url, String usuario, String senha) {
         try {

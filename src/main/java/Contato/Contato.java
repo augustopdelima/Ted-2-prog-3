@@ -15,22 +15,26 @@ public class Contato {
         this.conexao = conexao;
     }
 
-    public Contato(){}
+    public Contato() {}
 
-    public void gravarContato() throws SQLException {
-        String sql = "INSET INTO tb_contato(nome, e_mail, telefone) VALUES(?, ?, ?)";
-        PreparedStatement statement = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+    public void gravarContato() {
+        try {
+            String sql = "INSERT INTO tb_contato(nome, e_mail, telefone) VALUES(?, ?, ?)";
+            PreparedStatement statement = conexao.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
 
-        statement.setString(1, this.nome);
-        statement.setString(2, this.email);
-        statement.setString(3, this.telefone);
+            statement.setString(1, this.nome);
+            statement.setString(2, this.email);
+            statement.setString(3, this.telefone);
 
-        statement.execute();
-        ResultSet result = statement.getGeneratedKeys();
+            statement.execute();
+            ResultSet result = statement.getGeneratedKeys();
 
-        if (result.next()) {
-            this.idContato = result.getInt(1);
-            System.out.println("Contato gravado!");
+            if (result.next()) {
+                this.idContato = result.getInt(1);
+                System.out.println("Contato gravado!");
+            }
+        } catch (SQLException e){
+            System.out.println("Erro de sql: "+e.getMessage());
         }
     }
 
@@ -148,7 +152,6 @@ public class Contato {
 
         return contatos;
     }
-
 
     public int getIdContato() {
         return idContato;
