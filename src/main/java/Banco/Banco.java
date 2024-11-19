@@ -10,13 +10,13 @@ public class Banco {
     private String mensagemErro;
 
     public Banco(String servidor, String porta, String nomeBaco, String usuario, String senha) {
-        String urlBase = "jdbc:mysql://?:?/?";
+        String urlBase = "jdbc:mysql://%s:%s/%s";
         String realUrl = String.format(urlBase, servidor, porta, nomeBaco);
         this.conectar(realUrl, usuario, senha);
     }
 
     public Banco(String nomeBanco, String usuario, String senha) {
-        String urlBase = "jdbc:mysql://localhost:3306/?";
+        String urlBase = "jdbc:mysql://localhost:3306/%s";
         String realUrl = String.format(urlBase, nomeBanco);
         this.conectar(realUrl, usuario, senha);
     }
