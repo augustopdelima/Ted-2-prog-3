@@ -9,37 +9,42 @@ import Contato.Contato;
 
 public class Main {
     public static void main(String[] args) {
-        Banco banco = new Banco("programacao3", "programacao3", "123456");
+        Banco banco = new Banco("programacao3", "user", "password");
         Contato contato = new Contato(banco.obterConexao());
         Scanner scanner = new Scanner(System.in);
         int opcao = 0;
 
-        while (opcao != 7) {
-            System.out.printf("%2s\n", "===== SISTEMA DE CONTATOS =====");
-            System.out.printf("%2s\n", "1. Gravar contato");
-            System.out.printf("%2s\n", "2. Atualizar contato");
-            System.out.printf("%2s\n", "3. Deletar contato");
-            System.out.printf("%2s\n", "4. Exibir contato");
-            System.out.printf("%2s\n", "5. Filtrar contatos");
-            System.out.printf("%2s\n", "6. Listar contatos");
-            System.out.printf("%2s\n", "7. Sair");
-            System.out.println();
-            System.out.printf("%2s", "Escolha uma opção: ");
-            opcao = scanner.nextInt();
-            scanner.nextLine();
-            limpaTela(false);
+        if(banco.conectado()) {
+            while (opcao != 7) {
+                System.out.printf("%2s\n", "===== SISTEMA DE CONTATOS =====");
+                System.out.printf("%2s\n", "1. Gravar contato");
+                System.out.printf("%2s\n", "2. Atualizar contato");
+                System.out.printf("%2s\n", "3. Deletar contato");
+                System.out.printf("%2s\n", "4. Exibir contato");
+                System.out.printf("%2s\n", "5. Filtrar contatos");
+                System.out.printf("%2s\n", "6. Listar contatos");
+                System.out.printf("%2s\n", "7. Sair");
+                System.out.println();
+                System.out.printf("%2s", "Escolha uma opção: ");
+                opcao = scanner.nextInt();
+                scanner.nextLine();
+                limpaTela(false);
 
-            switch (opcao) {
-                case 1 -> gravarContato(scanner, contato);
-                case 2 -> atualizarContato(scanner, contato);
-                case 3 -> deletarContato(scanner, contato);
-                case 4 -> exibirContato(scanner, contato);
-                case 5 -> filtrarContatos(scanner, contato);
-                case 6 -> listarContatos(scanner, contato);
-                case 7 -> System.out.println("Saindo...");
-                default -> mostraMensagemTemporaria("Opção inválida! Tente novamente", true);
+                switch (opcao) {
+                    case 1 -> gravarContato(scanner, contato);
+                    case 2 -> atualizarContato(scanner, contato);
+                    case 3 -> deletarContato(scanner, contato);
+                    case 4 -> exibirContato(scanner, contato);
+                    case 5 -> filtrarContatos(scanner, contato);
+                    case 6 -> listarContatos(scanner, contato);
+                    case 7 -> System.out.println("Saindo...");
+                    default -> mostraMensagemTemporaria("Opção inválida! Tente novamente", true);
+                }
             }
+        } else {
+            System.out.println(banco.obterMensagemErro());
         }
+
 
         scanner.close();
     }
@@ -80,15 +85,23 @@ public class Main {
     public static void filtrarContatos(Scanner scanner, Contato contato) {
         System.out.println("===== FILTRAR CONTATOS =====\n");
         String termo = formularioTermo(scanner);
-        List<Contato> contatos = contato.pesquisaContato(termo);
-        System.out.println();
-        exibeContatos(scanner, contatos);
+        try {
+            List<Contato> contatos = contato.pesquisaContato(termo);
+            System.out.println();
+            exibeContatos(scanner, contatos);
+        } catch (Exception e) {
+            System.out.println("Algo deu errado!");
+        }
     }
 
     public static void listarContatos(Scanner scanner, Contato contato) {
         System.out.println("===== LISTAR CONTATOS =====\n");
-        List<Contato> contatos = contato.obterListaContatos();
-        exibeContatos(scanner, contatos);
+        try {
+            List<Contato> contatos = contato.obterListaContatos();
+            exibeContatos(scanner, contatos);
+        } catch (Exception e) {
+            System.out.println("Algo deu errado!");
+        }
     }
 
     public static void exibeContatos(Scanner scanner, List<Contato> contatos) {
