@@ -1,6 +1,7 @@
 package org.example;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 import Banco.Banco;
@@ -33,8 +34,8 @@ public class Main {
                 case 2 -> atualizarContato(scanner, contato);
                 case 3 -> deletarContato(scanner, contato);
                 case 4 -> exibirContato(scanner, contato);
-                case 5 -> filtrarContatos(scanner);
-                case 6 -> listarContatos();
+                case 5 -> filtrarContatos(scanner, contato);
+                case 6 -> listarContatos(scanner, contato);
                 case 7 -> System.out.println("Saindo...");
                 default -> mostraMensagemTemporaria("Opção inválida! Tente novamente", true);
             }
@@ -76,12 +77,32 @@ public class Main {
         limpaTela(true);
     }
     
-    public static void filtrarContatos(Scanner scanner) {
-
+    public static void filtrarContatos(Scanner scanner, Contato contato) {
+        System.out.println("===== FILTRAR CONTATOS =====\n");
+        String termo = formularioTermo(scanner);
+        List<Contato> contatos = contato.pesquisaContato(termo);
+        System.out.println();
+        exibeContatos(scanner, contatos);
     }
 
-    public static void listarContatos() {
+    public static void listarContatos(Scanner scanner, Contato contato) {
+        System.out.println("===== LISTAR CONTATOS =====\n");
+        List<Contato> contatos = contato.obterListaContatos();
+        exibeContatos(scanner, contatos);
+    }
 
+    public static void exibeContatos(Scanner scanner, List<Contato> contatos) {
+        if (contatos.isEmpty()) {
+            mostraMensagemTemporaria("Nenhum contato a exibir!", true);
+        } else {
+            for (Contato contato : contatos) {
+                System.out.println(contato.toString());
+            }
+
+            System.out.println("Precione ENTER para continuar");
+            scanner.nextLine();
+            limpaTela(false);
+        }
     }
 
     public static void formularioContato(Scanner scanner, Contato contato) {
@@ -99,6 +120,11 @@ public class Main {
         System.out.printf("Id do contato: ");
         contato.setIdContato(scanner.nextInt());
         scanner.nextLine();
+    }
+
+    public static String formularioTermo(Scanner scanner) {
+        System.out.printf("Termo de busca do contato: ");
+        return scanner.nextLine();
     }
 
     public static void mostraMensagemTemporaria(String mensagem, boolean limparTela) {
